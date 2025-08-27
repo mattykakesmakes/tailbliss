@@ -15,14 +15,32 @@
                     </p>
                 </div>
                 <div class="col-span-6">
-                    {{ $hero := resources.GetMatch "images/pages/tailbliss-rocket-indigo.png" }}
-
-                    {{ $thumb := ($hero.Fill "400x400 webp q90") }}
-                    {{ $large := ($hero.Fill "576x576 webp q90") }}
-
-                    <img srcset="
-                        {{- with $thumb.RelPermalink -}}{{.}} 400w{{- end -}}
-                        {{- with $large.RelPermalink -}}, {{.}} 576w{{- end -}}" src="{{ $hero.RelPermalink }}" width="100%" height="" alt="TailBliss Hero" class="mx-auto w-full max-w-xl rounded-lg" />
+                    {{/* Use Hugo's image processing for optimized responsive images */}}
+                    {{ $heroImage := resources.Get "images/pages/tailbliss-rocket-indigo.png" }}
+                    {{ if $heroImage }}
+                        {{ $heroWebP := $heroImage.Resize "576x576 webp q85" }}
+                        {{ $heroWebPSmall := $heroImage.Resize "320x320 webp q85" }}
+                        <img 
+                            src="{{ $heroWebP.RelPermalink }}" 
+                            srcset="{{ $heroWebPSmall.RelPermalink }} 320w, {{ $heroWebP.RelPermalink }} 576w"
+                            sizes="(max-width: 640px) 320px, 576px"
+                            alt="TailBliss Hero" 
+                            class="overflow-hidden mx-auto rounded-2xl shadow-xl hero-image"
+                            width="{{ $heroWebP.Width }}" 
+                            height="{{ $heroWebP.Height }}"
+                            loading="eager"
+                            fetchpriority="high" />
+                    {{ else }}
+                        {{/* Fallback to static image */}}
+                        <img 
+                            src="/images/tailbliss-rocket-indigo.webp" 
+                            alt="TailBliss Hero" 
+                            class="overflow-hidden mx-auto rounded-2xl shadow-xl hero-image"
+                            width="576" 
+                            height="576"
+                            loading="eager"
+                            fetchpriority="high" />
+                    {{ end }}
                 </div>
             </div>
         </div>
