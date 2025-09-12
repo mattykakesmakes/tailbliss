@@ -248,5 +248,5 @@ caches:
 # Image processing defaults
 imaging:
   quality: 85
-  resampleFilter: lanczos
-  anchor: smart
+  resampleFilter: Lanczos
+  anchor: Smart
